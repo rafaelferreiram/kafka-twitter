@@ -90,6 +90,11 @@ public class TwitterProducer {
 		properties.setProperty(ProducerConfig.RETRIES_CONFIG, Integer.toString(Integer.MAX_VALUE));
 		properties.setProperty(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "5");
 
+		// high throughput producer
+		properties.setProperty(ProducerConfig.COMPRESSION_TYPE_CONFIG, ConfigConstants.compressionType);
+		properties.setProperty(ProducerConfig.LINGER_MS_CONFIG, "15");
+		properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, Integer.toString(32 * 1024)); //32 BK batch size
+
 		// create Producer
 		KafkaProducer<String, String> producer = new KafkaProducer<String, String>(properties);
 		return producer;
@@ -104,7 +109,7 @@ public class TwitterProducer {
 		Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
 		StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
 		// Optional: set up some followings and track terms
-		List<String> terms = Lists.newArrayList("kafka");
+		List<String> terms = Lists.newArrayList("covid-19");
 		hosebirdEndpoint.trackTerms(terms);
 
 		// These secrets should be read from a config file
